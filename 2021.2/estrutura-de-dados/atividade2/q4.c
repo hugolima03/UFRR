@@ -1,35 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// int main()
-// {
-//   char **nomes;
-//   nomes = malloc(sizeof(char *) * 10);
+char *readInfiniteString() {
+    int l = 256;
+    char *buf = malloc(l);
+    int p = 0;
+    char ch;
 
-//   int *vetor = NULL;
-//   int num_elementos = 0;
+    ch = getchar();
+    while(ch != '\n') {
+        buf[p++] = ch;
+        if (p == l) {
+            l += 256;
+            buf = realloc(buf, l);
+        }
+        ch = getchar();
+    }
+    buf[p] = '\0';
 
-//   do
-//   {
-//     printf("\nDigite uma palavra: \n ");
-//     scanf("%d", &num);
+    return buf;
+}
 
-//     if (num)
-//     {
-//     }
-//   } while (num);
-
-//   free(vetor);
-// }
-
-int main() {
-  int **mat, i , j;
-
-  mat = malloc(4 * sizeof(int*));
-
-  for (i = 0; i < 4; i++) {
-    mat[i] = malloc(3 * sizeof(int));
-  }
-
-  return 0;
+int main(int argc, char *argv[]) {
+    printf("> ");
+    char *buf = readInfiniteString();
+    printf("%s\n", buf);
+    free(buf);
 }
