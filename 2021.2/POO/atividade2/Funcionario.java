@@ -1,4 +1,4 @@
-package questao01;
+package atividade2;
 
 public class Funcionario {
   String name;
@@ -14,5 +14,13 @@ public class Funcionario {
   
   void calculaGanhoAnual() {
     System.out.println("Salário anual: " + this.pay * 12);
+  }
+
+  void mostrar() {
+    System.out.println(this.name);
+    System.out.println(this.department);
+    System.out.println(this.pay);
+    System.out.println(this.initialDate);
+    System.out.println(this.id);
   }
 }
