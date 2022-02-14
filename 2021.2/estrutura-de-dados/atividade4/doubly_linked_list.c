@@ -73,55 +73,55 @@ void List_print(List *L) {
   printf("NULL\n");
 }
 
-void List_remove(List *L, int val) {
-  if (!List_is_empty(L)) {
-    if (L->begin->val == val) {
-      Node *p = L->begin;
+void List_add_last(List *L, int val) {
+  Node *p = create_node(val);
+  if (List_is_empty(L)) {
+    L->end = p;
+    L->begin = p;
+  } else {
+    p->prev = L->end;
+    L->end->next = p;
+  }
+  L->end = p;
+  L->size++;
+}
 
-      if (p->next == NULL && p->prev == NULL) {
-        L->begin = NULL;
-        L->end = NULL;
-      } else {
+void List_remove(List *L, int val) {
+  Node *p = L->begin;
+  while (p != NULL) {
+    if (p->val == val) {
+      if (L->begin->val == val) {
         L->begin = p->next;
         p->next->prev = NULL;
+      } else {
+        p->prev->next = p->next;
       }
+
       free(p);
       L->size--;
-    } else {
-      Node *p = L->begin->next;
-
-      while (p != NULL) {
-        if (p->val == val) {
-          if (L->end == p) {
-            L->end = p->prev;
-            p->prev->next = NULL;
-          } else {
-            p->prev->next = p->next;
-            p->next->prev = p->prev;
-          }
-          free(p);
-          L->size--;
-        } else {
-          p = p->next;
-        }
-      }
     }
+    p = p->next;
   }
 }
 
 // ----------- TESTE DO CÓDIGO ------------
 int main() {
   List *L = create_list();
-  List_add_first(L, 7);
-  List_add_first(L, 4);
-  List_add_first(L, 2);
-  List_add_first(L, 10);
+  // List_add_first(L, 7);
+  // List_add_first(L, 4);
+  // List_add_first(L, 2);
+  // List_add_first(L, 10);
+
+  List_add_last(L, 7);
+  List_add_last(L, 4);
+  List_add_last(L, 2);
+  List_add_last(L, 10);
 
   List_remove(L, 10);
-  List_remove(L, 2);
 
   List_print(L);
 
   destroy_list(&L);
+
   return 0;
 }

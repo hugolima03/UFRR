@@ -1,0 +1,183 @@
+#include "main.h"
+
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX 100
+
+int main() {
+  List *l = List_create();
+
+  // LINHA 1
+  char line1[100];
+  fgets(line1, 100, stdin);
+  line1[strcspn(line1, "\n")] = 0;  // Remove as quebras de linha do fgets
+
+  char delim[] = " ";
+  char nao[] = "nao";
+
+  char *ptr1 = strtok(line1, delim);
+
+  while (ptr1 != NULL) {
+    List_append(l, ptr1);
+    ptr1 = strtok(NULL, delim);
+  }
+
+  // LINHA 2
+  char line2[100];
+  fgets(line2, 100, stdin);
+  line2[strcspn(line2, "\n")] = 0;
+
+  // LINHA 3
+  char line3[20];
+  scanf("%s", line3);
+
+  // se a linha3 é igual a "nao"
+  char *ptr2 = strtok(line2, delim);
+  if (!strcmp(line3, nao)) {
+    while (ptr2 != NULL) {
+      List_append(l, ptr2);
+      ptr2 = strtok(NULL, delim);
+    }
+  } else {
+    while (ptr2 != NULL) {
+      int i = List_find(l, line3);
+      List_insert(l, i, ptr2);
+      ptr2 = strtok(NULL, delim);
+    }
+  }
+
+  List_print(l);
+
+  List_destroy(l);
+
+  return 0;
+}
+
+Node *Node_create() {
+  Node *node = malloc(sizeof(Node));
+  assert(node != NULL);
+
+  node->data = "";
+  node->next = NULL;
+
+  return node;
+}
+
+void Node_destroy(Node *node) {
+  assert(node != NULL);
+  free(node);
+}
+
+List *List_create() {
+  List *list = malloc(sizeof(List));
+  assert(list != NULL);
+
+  Node *node = Node_create();
+  list->first = node;
+
+  return list;
+}
+
+void List_destroy(List *list) {
+  assert(list != NULL);
+
+  Node *node = list->first;
+  Node *next;
+  while (node != NULL) {
+    next = node->next;
+    free(node);
+    node = next;
+  }
+
+  free(list);
+}
+
+void List_append(List *list, char *str) {
+  assert(list != NULL);
+  assert(str != NULL);
+
+  Node *node = list->first;
+  while (node->next != NULL) {
+    node = node->next;
+  }
+
+  node->data = str;
+  node->next = Node_create();
+}
+
+void List_insert(List *list, int index, char *str) {
+  assert(list != NULL);
+  assert(str != NULL);
+  assert(0 <= index);
+  assert(index <= List_length(list));
+
+  if (index == 0) {
+    Node *after = list->first;
+    list->first = Node_create();
+    list->first->data = str;
+    list->first->next = after;
+  } else if (index == List_length(list)) {
+    List_append(list, str);
+  } else {
+    Node *before = list->first;
+    Node *after = list->first->next;
+    while (index > 1) {
+      index--;
+      before = before->next;
+      after = after->next;
+    }
+    before->next = Node_create();
+    before->next->data = str;
+    before->next->next = after;
+  }
+}
+
+int List_find(List *list, char *str) {
+  assert(list != NULL);
+  assert(str != NULL);
+
+  int index = 0;
+  Node *node = list->first;
+  while (node->next != NULL) {
+    if (strlen(str) == strlen(node->data)) {
+      int cmp = strcmp(str, node->data);
+
+      if (cmp == 0) {
+        return index;
+      }
+    }
+    node = node->next;
+    index++;
+  }
+  return -1;
+}
+
+int List_length(List *list) {
+  assert(list != NULL);
+
+  Node *node = list->first;
+  int length = 0;
+  while (node->next != NULL) {
+    length++;
+    node = node->next;
+  }
+
+  return length;
+}
+
+void List_print(List *list) {
+  assert(list != NULL);
+
+  Node *node = list->first;
+  while (node->next != NULL) {
+    printf("%s", node->data);
+    node = node->next;
+    if (node->next != NULL) {
+      printf(" ");
+    }
+  }
+  printf("\n");
+}
