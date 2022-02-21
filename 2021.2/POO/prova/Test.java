@@ -12,12 +12,12 @@ public class Test {
         { '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', 'S', '*', '*', '*', '*', '*', '*' }
     };
 
-    RatInMaze rogerio = new RatInMaze("Rogério", maze);
-    RatInMaze ana = new RatInMaze("Ana", maze);
-    // RatInMaze carlos = new RatInMaze("Carlos", maze);
+    RatInMaze hugo = new RatInMaze("Hugo", maze);
+    RatInMaze alexa = new RatInMaze("Alexa", maze);
+    RatInMaze kelvin = new RatInMaze("Kelvin", maze);
 
-    rogerio.start();
-    ana.start();
-    // carlos.start();
+    hugo.start();
+    alexa.start();
+    kelvin.start();
   }
 }

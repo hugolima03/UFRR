@@ -48,7 +48,7 @@ public class RatInMaze extends Thread {
     transformMaze();
     setVisited(true, visited);
     if (isReachable(maze, name, visited)) {
-      System.out.printf("%s chegou primeiro!\n", name);
+      System.out.printf("\n%s chegou primeiro!\n", name);
       System.exit(0);
     }
     ;
@@ -64,10 +64,10 @@ public class RatInMaze extends Thread {
   }
 
   private static boolean isReachable(int maze[][], String ratName, boolean[][] visited) {
-    // Start position
-    int i = 1, j = 1;
+    // Posição do inicio(linha, coluna)
+    int i = 0, j = 1;
 
-    // End position
+    // posição do final(linha, coluna)
     int fx, fy;
     fx = 8;
     fy = 26;
@@ -80,18 +80,18 @@ public class RatInMaze extends Thread {
 
     while (!s.empty()) {
       try {
-        Thread.sleep(1);
+        Thread.sleep(100);
       } catch (InterruptedException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
       }
 
       temp = s.peek();
-      int d = temp.getDir();
+      int d = temp.getDirRandom();
       i = temp.getX();
       j = temp.getY();
 
-      temp.setDir(temp.getDir() + 1);
+      temp.removeAttempt(d);
       s.pop();
       s.push(temp);
 
@@ -107,8 +107,9 @@ public class RatInMaze extends Thread {
           Node temp1 = new Node(i - 1, j);
           visited[i - 1][j] = false;
           s.push(temp1);
-          // System.out.println(d);
-          System.out.printf("%s: foi para cima\n", ratName);
+          System.out.printf("\n%s foi para cima\n", ratName);
+        } else {
+          // System.out.printf("\n%s: tentou ir para cima\n", ratName);
         }
       } else if (d == 1) {
         // Checking the left direction
@@ -117,8 +118,9 @@ public class RatInMaze extends Thread {
           Node temp1 = new Node(i, j - 1);
           visited[i][j - 1] = false;
           s.push(temp1);
-          // System.out.println(d);
-          System.out.printf("%s: foi para esquerda\n", ratName);
+          System.out.printf("\n%s foi para esquerda\n", ratName);
+        } else {
+          // System.out.printf("\n%s: tentou ir para esquerda\n", ratName);
         }
       } else if (d == 2) {
         // Checking the down direction
@@ -127,8 +129,9 @@ public class RatInMaze extends Thread {
           Node temp1 = new Node(i + 1, j);
           visited[i + 1][j] = false;
           s.push(temp1);
-          // System.out.println(d);
-          System.out.printf("%s: foi para baixo\n", ratName);
+          System.out.printf("\n%s para baixo\n", ratName);
+        } else {
+          // System.out.printf("\n%s: tentou ir para baixo\n", ratName);
         }
       } else if (d == 3) {
         // Checking the right direction
@@ -137,17 +140,17 @@ public class RatInMaze extends Thread {
           Node temp1 = new Node(i, j + 1);
           visited[i][j + 1] = false;
           s.push(temp1);
-          // System.out.println(d);
-          System.out.printf("%s: foi para direita\n", ratName);
+          System.out.printf("\n%s para direita\n", ratName);
+        } else {
+          // System.out.printf("\n%s: tentou ir para direita\n", ratName);
         }
       }
 
-      // Retract back
+      // Retract back(voltar)
       else {
         visited[temp.getX()][temp.getY()] = true;
         s.pop();
-        // System.out.println(d);
-        System.out.printf("%s: voltou\n", ratName);
+        System.out.printf("\n%s: voltou\n", ratName);
       }
     }
 
