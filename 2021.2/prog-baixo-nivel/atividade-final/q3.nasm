@@ -1,50 +1,66 @@
 section .bss
-num resb 1
+    num resb 40
 
 section .data
-msg1 db'enter a number',0xa
-len1 equ $-msg1
-msg2 db' is even',0xa
+msg2 db' é par',0xa
 len2 equ $-msg2
-msg3 db'is odd',0xa
+msg3 db'é impar',0xa
 len3 equ $-msg3
 
 section .text
 global _start
 _start:
-mov edx,len1
-mov ecx,msg1
-mov ebx,1
-mov eax,4
-int 80h
+    mov rax, 0
+    mov rdi, 0
+    mov rsi, num
+    mov rdx, 32
+    syscall
 
-mov ecx,num
-mov ebx,0
-mov eax,3
-int 80h
+    lea rax, [num + 5]
+    mov BYTE [rax], 0
+    lea rdi, [num]
+    call parse_uint
 
+    and rax, 1
 
-mov al,[num]
-add al,30h
-and al,1
-jz iseven
-jmp isodd
-isodd:
-mov edx,len3
-mov ecx,msg3
-mov ebx,1
-mov eax,4
-int 80h
-jmp exit
+    jz par
+    jmp impar
+impar:
+    mov edx,len3
+    mov ecx,msg3
+    mov ebx,1
+    mov eax,4
+    int 80h
+    jmp exit
 
-iseven:
-mov edx,len2
-mov ecx,msg2
-mov ebx,1
-mov eax,4
-int 80h
-jmp exit
+par:
+    mov edx,len2
+    mov ecx,msg2
+    mov ebx,1
+    mov eax,4
+    int 80h
+    jmp exit
 
 exit:
-mov eax,1
-int 80h
+    mov eax,1
+    int 80h
+
+parse_uint:
+    mov r8, 10
+    xor rax, rax
+    xor rcx, rcx
+.loop:
+    movzx r9, byte [rdi + rcx] 
+    cmp r9b, '0'
+    jb .end
+    cmp r9b, '9'
+    ja .end
+    xor rdx, rdx 
+    mul r8
+    and r9b, 0x0f
+    add rax, r9
+    inc rcx 
+    jmp .loop 
+    .end:
+    mov rdx, rcx
+    ret
