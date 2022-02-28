@@ -1,86 +1,113 @@
-    SYS_EXIT  equ 1
-    SYS_READ  equ 3
-    SYS_WRITE equ 4
-    STDIN     equ 0
-    STDOUT    equ 1
-
-segment .data 
-
-    msg db "Please enter a digit ", 0xA,0xD 
-    len equ $- msg 
+segment .data
+    msg db "A soma é: "
+    len equ $-msg
+    lf db 0x0A
 
 segment .bss
+    n1 resb 40      
+    n2 resb 40
+    sum resb 40
+    sum_len resd 1
 
-    number1 resb 2 
-    number2 resb 2 
-    result resb 1    
+section .text
+    global _start
 
-segment .text 
+_start:
+    ; Input
+    mov rax, 0
+    mov rdi, 0
+    mov rsi, n1
+    mov rdx, 32
+    syscall
 
-    msg2 db "Please enter a second digit", 0xA,0xD 
-    len2 equ $- msg2 
+    mov rax, 0
+    mov rdi, 0
+    mov rsi, n2
+    mov rdx, 32
+    syscall
 
-    msg3 db "The sum is: "
-    len3 equ $- msg3
+    lea rax, [n1 + 5];
+    mov BYTE [rax], 0
+    lea rdi, [n1]
+    call parse_uint
 
-global _start 
+    mov rbx, rax
 
- _start: 
+    lea rax, [n2 + 5];
+    mov BYTE [rax], 0
+    lea rdi, [n2]
+    call parse_uint
 
-    mov eax, SYS_WRITE         
-    mov ebx, STDOUT         
-    mov ecx, msg         
-    mov edx, len 
-    int 0x80                
+    add rax, rbx
 
-    mov eax, SYS_READ 
-    mov ebx, STDIN  
-    mov ecx, number1 
-    mov edx, 2
-    int 0x80            
+    ; Number para string
+    mov edi, sum
+    call int2str
+    sub edi, sum
+    mov [sum_len], edi
 
-    mov eax, SYS_WRITE        
-    mov ebx, STDOUT         
-    mov ecx, msg2          
-    mov edx, len2         
+    ; Output "A soma é: "
+    mov ecx, msg
+    mov edx, len
+    mov ebx, 1
+    mov eax, 4
     int 0x80
 
-    mov eax, SYS_READ  
-    mov ebx, STDIN  
-    mov ecx, number2 
-    mov edx, 2
-    int 0x80        
-
-    mov eax, SYS_WRITE         
-    mov ebx, STDOUT         
-    mov ecx, msg3          
-    mov edx, len3         
+    ; Output soma valor
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, sum
+    mov edx, [sum_len]
     int 0x80
 
-    ; load number1 into eax and subtract '0' to convert from ASCII to decimal
-    mov eax, [number1]
-    sub eax, '0'
-    ; do the same for number2
-    mov ebx, [number2]
-    sub ebx, '0'
-
-    ; add eax and ebx, storing the result in eax
-    add eax, ebx
-    ; add '0' to eax to convert the digit from decimal to ASCII
-    add eax, '0'
-
-    ; store the result in result
-    mov [result], eax
-
-    ; print the result digit
-    mov eax, SYS_WRITE        
-    mov ebx, STDOUT
-    mov ecx, result         
-    mov edx, 1        
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, lf
+    mov edx, 1
     int 0x80
 
-
-exit:    
-    mov eax, SYS_EXIT   
-    xor ebx, ebx 
+    ; Exit code
+    mov eax, 1
+    mov ebx, 0
     int 0x80
+
+int2str:    ; Converts an positive integer in EAX to a string pointed to by EDI
+    xor ecx, ecx
+    mov ebx, 10
+    .LL1:                   ; First loop: Save the remainders
+    xor edx, edx            ; Clear EDX for div
+    div ebx                 ; EDX:EAX/EBX -> EAX Remainder EDX
+    push dx                 ; Save remainder
+    inc ecx                 ; Increment push counter
+    test eax, eax           ; Anything left to divide?
+    jnz .LL1                ; Yes: loop once more
+
+    .LL2:                   ; Second loop: Retrieve the remainders
+    pop dx                  ; In DL is the value
+    or dl, '0'              ; To ASCII
+    mov [edi], dl           ; Save it to the string
+    inc edi                 ; Increment the pointer to the string
+    loop .LL2               ; Loop ECX times
+
+    mov byte [edi], 0       ; Termination character
+    ret                     ; RET: EDI points to the terminating NULL
+
+parse_uint:
+    mov r8, 10
+    xor rax, rax
+    xor rcx, rcx
+.loop:
+    movzx r9, byte [rdi + rcx] 
+    cmp r9b, '0'
+    jb .end
+    cmp r9b, '9'
+    ja .end
+    xor rdx, rdx 
+    mul r8
+    and r9b, 0x0f
+    add rax, r9
+    inc rcx 
+    jmp .loop 
+    .end:
+    mov rdx, rcx
+    ret
