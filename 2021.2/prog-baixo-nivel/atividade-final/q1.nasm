@@ -71,7 +71,7 @@ _start:
     mov ebx, 0
     int 0x80
 
-int2str:    ; Converts an positive integer in EAX to a string pointed to by EDI
+int2str:    ; Converte um inteiro positivo em EAX em uma string apontada por EDI
     xor ecx, ecx
     mov ebx, 10
     .LL1:                   ; First loop: Save the remainders
