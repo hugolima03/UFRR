@@ -1,3 +1,9 @@
+; Atividade Final de Avaliação
+
+; Alunos:
+; Hugo Lima Romão
+; Valeria Alexandra Guevara Parra
+
 section .bss
     num resb 40
 

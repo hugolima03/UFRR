@@ -60,7 +60,6 @@ public class RatInMaze extends Thread {
         visited[i][j] = b;
       }
     }
-
   }
 
   private static boolean isReachable(int maze[][], String ratName, boolean[][] visited) {
@@ -80,7 +79,7 @@ public class RatInMaze extends Thread {
 
     while (!s.empty()) {
       try {
-        Thread.sleep(100);
+        Thread.sleep(500);
       } catch (InterruptedException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();

@@ -1,3 +1,9 @@
+// Atividade Final
+// Alunos:
+// Valeria Alexandra Guevara Parra
+// Hugo Lima Romão
+// Kelvin Araújo Ferreira
+
 public class TesteAgenda {
   public static void main(String[] args) {
     Agenda agenda = new Agenda();

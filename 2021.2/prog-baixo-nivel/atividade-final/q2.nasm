@@ -1,3 +1,8 @@
+; Atividade Final de Avaliação
+
+; Alunos:
+; Hugo Lima Romão
+; Valeria Alexandra Guevara Parra
 
 section .text
 global _start

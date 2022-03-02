@@ -1,3 +1,9 @@
+; Atividade Final de Avaliação
+
+; Alunos:
+; Hugo Lima Romão
+; Valeria Alexandra Guevara Parra
+
 segment .data
     msg db "A soma é: "
     len equ $-msg
