@@ -1,4 +1,4 @@
-% Aluno: Hugo Lima Romão
+% Alunos: Hugo Lima Romão e Va
 % Avaliação 2 - DCC511
 % Questão 6
 
@@ -22,7 +22,7 @@ filme('Volver', 'Drama', 'Almodóvar', 2006, 121).
 suspense(X, Y, Z, W, V) :- filme(X, Y, Z, W, V), Y == 'Suspense'.
 menorQue100(X, Y, Z, W, V) :- filme(X, Y, Z, W, V), V < 100.
 entre2000E2005(X, Y, Z, W, V) :- filme(X, Y, Z, W, V), W >= 2000, W =< 2005.
-classico(W) :- filme(_, _, _, W, _), W < 1980.
+classico(W) :- filme(W, _, _, T, _), T < 1980.
 genero(X) :- filme(_, X, _, _, _).
 
 % Quem	dirigiu	o	filme	Titanic?
@@ -49,10 +49,12 @@ genero(X) :- filme(_, X, _, _, _).
 
 % Usando	regra,	defina	o	predicado	clássico/1,	que	só	recupera	títulos	de	filmes	lançados antes	de	1980.
 
-?- forall(classico(X), writeln([X])).
+?- classico(W).
 
 % Usando	 regra,	 defina	 o	 predicado	 gênero/2,	 que	 só	 recupera	 títulos	 de	 filmes	 de	 um	gênero	específico.
-
-- forall(genero(X), writeln([X, Y, Z, W, V])).
+% Aqui usei o exemplo do genero de Suspense
+?- genero(X, 'Suspense') 
 
 % Usando	 clássico/1	 e	 gênero/2,	 faça	 uma	 consulta	 para	 recuperar	 títulos	 de	 filmes	clássicos	de	suspense.
+
+?- classico(W), genero(W, Y), Y = 'Suspense'
