@@ -1,4 +1,4 @@
-% Aluno: Hugo Lima Romão
+% Alunos: Hugo Lima Romão e Valeria Alexandra Guevara Parra
 % Avaliação 2 - DCC511
 % Questão 3
 
